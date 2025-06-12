@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Levicron 3D Viewer</title>
+  <style>
+    html, body {
+      margin: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    #renderCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+      background-color: rgb(212, 212, 212)
+    }
+  </style>
+</head>
+<body>
+<canvas id="renderCanvas"></canvas>
+
+<!-- Babylon.js Core + GLTF Loader + Environment -->
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.min.js"></script>
+<script src="https://cdn.babylonjs.com/environment.js"></script>
+
+<script>
+  const canvas = document.getElementById("renderCanvas");
+  const engine = new BABYLON.Engine(canvas, true);
+
+  const createScene = () => {
+    const scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color4(0.2, 0.2, 0.2, 1); // Grauer Hintergrund
+
+    // Lichtquelle: Spotlight von oben rechts
+    const light = new BABYLON.SpotLight("spotLight",
+      new BABYLON.Vector3(5, 10, -5), // Position
+      new BABYLON.Vector3(-1, -2, 1), // Richtung
+      Math.PI / 3,
+      2,
+      scene);
+    light.intensity = 1.2;
+    light.shadowEnabled = true;
+
+    // Environment Map für Reflexionen
+    const envTex = BABYLON.CubeTexture.CreateFromPrefilteredData(
+      "https://assets.babylonjs.com/environments/studio.env",
+      scene
+    );
+    scene.environmentTexture = envTex;
+    scene.createDefaultEnvironment({
+      environmentTexture: envTex,
+      createGround: false,
+      createSkybox: false
+    });
+
+    // Modell laden
+    BABYLON.SceneLoader.Append("", "100_xx1_xxx_xxx_xxx_ASD-Cx.glb", scene, function () {
+      scene.createDefaultCameraOrLight(true, true, true);
+      scene.activeCamera.alpha += Math.PI / 2;
+      scene.activeCamera.beta = Math.PI / 2.5;
+      scene.activeCamera.radius *= 1.5;
+
+      scene.activeCamera.useAutoRotationBehavior = true;
+      scene.activeCamera.autoRotationBehavior.idleRotationSpeed = 0.2;
+
+      // Materialien optimieren
+      scene.meshes.forEach(mesh => {
+        if (mesh.material && mesh.material instanceof BABYLON.PBRMaterial) {
+          mesh.material.metallic = 1.0;
+          mesh.material.roughness = 0.05;
+          mesh.material.environmentIntensity = 1.5;
+        }
+      });
+    });
+
+    return scene;
+  };
+
+  const scene = createScene();
+  engine.runRenderLoop(() => scene.render());
+  window.addEventListener("resize", () => engine.resize());
+</script>
+</body>
+</html>

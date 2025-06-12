@@ -1,0 +1,11 @@
+/* style.css */
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+model-viewer {
+  width: 100vw;
+  height: 100vh;
+}

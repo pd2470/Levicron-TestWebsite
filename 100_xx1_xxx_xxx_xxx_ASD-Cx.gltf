@@ -1,0 +1,217 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v5.4.0)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 7,
+            "type": "VEC3",
+            "max": [
+                52.001495361328125,
+                33.02069854736328,
+                50.35525131225586
+            ],
+            "min": [
+                37.61125946044922,
+                -31.8243465423584,
+                -55.12400436401367
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 7,
+            "type": "VEC3",
+            "max": [
+                0.7761229872703552,
+                0.902265191078186,
+                1.0
+            ],
+            "min": [
+                -0.5865617394447327,
+                -0.6294695734977722,
+                -0.5613607168197632
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 8,
+            "type": "SCALAR",
+            "max": [
+                6
+            ],
+            "min": [
+                0
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 46299,
+            "type": "VEC3",
+            "max": [
+                141.76499938964844,
+                80.95533752441406,
+                74.69190216064453
+            ],
+            "min": [
+                -298.82501220703125,
+                -69.07479095458984,
+                -58.45730209350586
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 46299,
+            "type": "VEC3",
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 154551,
+            "type": "SCALAR",
+            "max": [
+                46298
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 1729580,
+            "uri": "100_xx1_xxx_xxx_xxx_ASD-Cx_0.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 84,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 84,
+            "byteLength": 84,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 168,
+            "byteLength": 32,
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 200,
+            "byteLength": 555588,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 555788,
+            "byteLength": 555588,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1111376,
+            "byteLength": 618204,
+            "target": 34963
+        }
+    ],
+    "materials": [
+        {
+            "name": "Mat_1",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.5271148681640625,
+                    0.5271148681640625,
+                    0.5271148681640625,
+                    1.0
+                ],
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.30000001192092896
+            },
+            "doubleSided": true
+        }
+    ],
+    "meshes": [
+        {
+            "name": "meshes[0]",
+            "primitives": [
+                {
+                    "mode": 1,
+                    "material": 0,
+                    "indices": 2,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1
+                    }
+                },
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 3,
+                        "NORMAL": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "100_xx1_xxx_xxx_xxx_ASD-Cx",
+            "children": [
+                1
+            ]
+        },
+        {
+            "name": "100_xx1_xxx_xxx_xxx_ASD-Cx_node",
+            "children": [
+                2
+            ]
+        },
+        {
+            "name": "100_xx1_xxx_xxx_xxx_ASD-Cx_node_0",
+            "mesh": 0
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}
