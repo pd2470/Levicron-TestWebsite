@@ -48,6 +48,9 @@
   </style>
 </head>
 <body>
+  <table>
+
+  </table>
 <canvas id="renderCanvas"></canvas>
 <div id="label">ASD-Cx-01</div>
 <svg id="lineOverlay" width="100%" height="100%">
@@ -67,7 +70,7 @@
 <script>
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
-let camera;
+let camera, light;
 const label = document.getElementById("label");
 const line = document.getElementById("line");
 const gradient = document.getElementById("fadeGradient");
@@ -91,14 +94,35 @@ const createScene = () => {
   camera.lowerRadiusLimit = 1500;
   camera.upperRadiusLimit = 1500;
 
-  const light = new BABYLON.SpotLight("spotLight",
-    new BABYLON.Vector3(10, 20, -10),
-    new BABYLON.Vector3(-1, -2, 1),
-    Math.PI / 3,
-    2,
-    scene);
+  // Lichtquelle (wird später mit Kamera rotiert)
+  light = new BABYLON.DirectionalLight("dirLight", new BABYLON.Vector3(-2, -2, -2), scene);
+  light.position = new BABYLON.Vector3(250, 250, 250);
   light.intensity = 1.2;
 
+  // Schatten mit starker Weichzeichnung
+  const shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+  shadowGenerator.useBlurExponentialShadowMap = true;
+  shadowGenerator.blurKernel = 1024;
+  shadowGenerator.shadowMinZ = 1;
+  shadowGenerator.shadowMaxZ = 1024;
+
+  // Boden
+  const ground = BABYLON.MeshBuilder.CreateDisc("ground", {
+    radius: 1250,
+    tessellation: 128
+}, scene);
+ground.rotation.x = Math.PI / 2; // horizontal ausrichten
+ground.position.y = -50;
+const groundPBR = new BABYLON.PBRMaterial("groundPBR", scene);
+groundPBR.albedoColor = new BABYLON.Color3.FromHexString("#ff6600"); // kräftiges Orange
+groundPBR.metallic = 0.1;  // kaum metallisch
+groundPBR.roughness = 1000000000000; // rau, matt
+ground.material = groundPBR;
+
+  ground.receiveShadows = true;
+  
+
+  // Umgebung
   const envTex = BABYLON.CubeTexture.CreateFromPrefilteredData(
     "https://assets.babylonjs.com/environments/studio.env",
     scene
@@ -106,17 +130,23 @@ const createScene = () => {
   scene.environmentTexture = envTex;
   scene.createDefaultEnvironment({
     environmentTexture: envTex,
-    createGround: true,
+    createGround: false,
     createSkybox: false
   });
 
+  // Modelle platzieren
   const modelFiles = new Array(steps).fill("100_xx1_xxx_xxx_xxx_ASD-Cx.glb");
   modelFiles.forEach((file, index) => {
     BABYLON.SceneLoader.ImportMesh(null, "", file, scene, function (meshes) {
       if (!meshes || meshes.length === 0) return;
 
       const root = new BABYLON.TransformNode("root_" + index, scene);
-      meshes.forEach(m => m.parent = root);
+      meshes.forEach(m => {
+        m.parent = root;
+        m.receiveShadows = false;
+        m.castShadows = true;
+        shadowGenerator.addShadowCaster(m);
+      });
 
       const angle = (2 * Math.PI / steps) * index;
       const x = Math.cos(angle) * radius;
@@ -137,11 +167,53 @@ const createScene = () => {
     });
   });
 
+  BABYLON.SceneLoader.ImportMesh(null, "", "10.glb", scene, function (meshes) {
+      if (!meshes || meshes.length === 0) return;
+
+      const root = new BABYLON.TransformNode("root_8", scene);
+      meshes.forEach(m => {
+        m.parent = root;
+        m.receiveShadows = false;
+        m.castShadows = true;
+        shadowGenerator.addShadowCaster(m);
+      });
+
+      const angle = (2 * Math.PI / steps) * index;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+      root.position = new BABYLON.Vector3(x, 0.5, z);
+
+      root.lookAt(BABYLON.Vector3.Zero());
+      root.rotate(BABYLON.Axis.Y, -Math.PI / 4, BABYLON.Space.LOCAL);
+
+      root.getChildMeshes().forEach(mesh => {
+        const mat = mesh.material;
+        if (mat && mat instanceof BABYLON.PBRMaterial) {
+          mat.metallic = 1.0;
+          mat.roughness = 0.05;
+          mat.environmentIntensity = 1.5;
+        }
+      });
+    });
+
   return scene;
 };
 
 const scene = createScene();
-engine.runRenderLoop(() => scene.render());
+
+// Mitrotierende Lichtquelle + Scene Rendering
+engine.runRenderLoop(() => {
+  const angle = camera.alpha;
+  const lx = Math.cos(angle + Math.PI / 4) * 200;
+  const lz = Math.sin(angle + Math.PI / 4) * 200;
+  const ly = 150;
+
+  light.position.set(lx, ly, lz);
+  light.direction = new BABYLON.Vector3(-lx, -ly, -lz).normalize();
+
+  scene.render();
+});
+
 window.addEventListener("resize", () => engine.resize());
 
 function updateLabel(index) {
@@ -192,9 +264,7 @@ function animateToNextAngle() {
   if (delta > Math.PI) delta -= 2 * Math.PI;
   if (delta < -Math.PI) delta += 2 * Math.PI;
 
-  const endAlpha = currentAlpha + delta;
   const startTime = performance.now();
-
   hideLabel();
 
   function animateFrame(now) {
