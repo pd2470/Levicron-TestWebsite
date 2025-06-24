@@ -75,7 +75,7 @@ const label = document.getElementById("label");
 const line = document.getElementById("line");
 const gradient = document.getElementById("fadeGradient");
 
-const steps = 7;
+const steps = 1;
 const radius = 650;
 const pauseTime = 5000;
 const rotateTime = 1000;
@@ -135,7 +135,7 @@ ground.material = groundPBR;
   });
 
   // Modelle platzieren
-  const modelFiles = new Array(steps).fill("100_xx1_xxx_xxx_xxx_ASD-Cx.glb");
+  const modelFiles = new Array(steps).fill("Test.glb");
   modelFiles.forEach((file, index) => {
     BABYLON.SceneLoader.ImportMesh(null, "", file, scene, function (meshes) {
       if (!meshes || meshes.length === 0) return;
