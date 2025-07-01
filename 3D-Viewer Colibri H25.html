@@ -85,10 +85,7 @@
 <body width="100%">
   <table width="100%">
     <tr width="100%">
-      <th width="5%">
-
-      </th>
-      <th width="90%">
+      <th width="100%">
         <div id="viewer" style="width: 100%; height: 600px; position: relative; background: white;">
           <canvas id="renderCanvas"></canvas>
           <svg id="lineOverlay"></svg>
@@ -102,9 +99,6 @@
             <div class="staticLabel" id="staticLabel2">Geringste Spindelfehler ihrer Klasse nach DIN ISO230-7 zur Bearbeitung von optischen Komponenten</div>
           </div>
         </div>
-      </th>
-      <th width="5%">
-
       </th>
     </tr>
   </table>
@@ -145,10 +139,6 @@
         .replace(/\n/g, '<br>')
         .replace(/•/g, '&bull;');
       div.style.cssText = "position:absolute;padding:4px 8px;background:white;color:black;border:1px solid orange;border-radius:6px;font-family:'Bahnschrift';font-size:14px;white-space:nowrap;box-shadow:1px 1px 4px rgba(0,0,0,0.3);cursor:pointer;pointer-events:auto;transition: opacity 0.5s ease;";
-      div.addEventListener("click", () => {
-        infoBox.innerText = `Detailinformationen zu: ${label.text}`;
-        infoBox.style.display = "block";
-      });
       labelsContainer.appendChild(div);
       label.element = div;
 
@@ -203,6 +193,16 @@
       labelsContainer.style.opacity = show ? "1" : "0";
       lineOverlay.style.opacity = show ? "1" : "0";
       document.getElementById("staticLabels").style.opacity = show ? "1" : "0";
+    }
+
+    function updateScene(){
+      const width = viewer.clientWidth;
+
+      console.log(width);
+
+      zoom = width / 1900;
+
+      document.getElementById("viewer").style.transform = "scale(" + zoom + ")";
     }
 
     function createScene() {
@@ -263,6 +263,7 @@
     });
 
     window.addEventListener("resize", () => engine.resize());
+    window.addEventListener("resize", () => updateScene());
 
     canvas.addEventListener("mousemove", () => {
       clearTimeout(rotationTimeout);
