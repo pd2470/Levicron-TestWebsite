@@ -247,7 +247,7 @@ if (isMobileDevice()) {
       scene.environmentTexture = envTex;
       scene.createDefaultEnvironment({ environmentTexture: envTex, createGround: false, createSkybox: false });
 
-      BABYLON.SceneLoader.ImportMesh(null, "https://pd2470.github.io/Levicron-TestWebsite/", "Test.glb", scene, function (meshes) {
+      BABYLON.SceneLoader.ImportMesh(null, "https://pd2470.github.io/Levicron-TestWebsite/", "100_xx1_xxx_xxx_xxx_ASD-Cx.glb", scene, function (meshes) {
         const root = new BABYLON.TransformNode("root", scene);
         meshes.forEach(m => {
           m.parent = root;
